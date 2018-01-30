@@ -2,53 +2,16 @@ import React, {Component} from 'react';
 import * as firebase from 'firebase';
 import { Redirect } from 'react-router-dom';
 import { Dimmer, Loader } from 'semantic-ui-react';
+import withAuth from './hocs/withAuth';
 
-export default class Main extends Component {
-  state = {
-    currentUser: null,
-    loading: false,
-    redirectToLogin: false
-  }
-  componentWillMount() {
-    const currentUser = firebase.auth().currentUser;
-    if (currentUser) {
-      this.setState({
-        currentUser
-      });
-    } else {
-      this.setState({
-        loading: true
-      })
-      const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-        unsubscribe();
-        if (user) {
-          this.setState({
-            currentUser: user,
-            loading: false
-          });
-        } else {
-          this.setState({
-            redirectToLogin: true
-          });
-        }
-      })
-    }
-  }
+class Main extends Component {
   render() {
-    if (this.state.redirectToLogin) {
-      return (
-        <Redirect to="/login" />
-      )
-    } else if (this.state.loading) {
-      return (
-        <Dimmer active={this.state.loading}>
-          <Loader />
-        </Dimmer>
-      )
-    } else {
-      return (
-        <div>{this.state.currentUser.uid}</div>
-      )
-    }
+    const currentUser = firebase.auth().currentUser;
+    const {color = 'black'} = this.props;
+    return (
+      <div style={{color: color}}>{currentUser.uid}</div>
+    );
   }
 }
+
+export default withAuth(Main);

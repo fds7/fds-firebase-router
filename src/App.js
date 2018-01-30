@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div>
-          <Route path="/" exact component={Main} />
+          <Route path="/" exact render={() => <Main color="red" />} />
           <Route path="/login" component={Login} />
         </div>
       </BrowserRouter>
